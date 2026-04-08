@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MahaValuation | Property Intelligence</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; overflow: hidden; }
+        
+        #map { height: 100vh; width: 100%; z-index: 1; filter: contrast(1.1) grayscale(0.2); }
+        
+        .area-label {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #fbbf24;
+            color: #fbbf24;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+
+        .search-results {
+            position: fixed;
+            top: 145px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 480px;
+            z-index: 2005;
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.7);
+            border: 1px solid #e2e8f0;
+        }
+
+        .report-panel {
+            background: #ffffff;
+            border-radius: 3rem 3rem 0 0;
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 3000;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 -25px 50px rgba(0,0,0,0.5);
+        }
+
+        .slide-up { transform: translateY(0); transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
+        .slide-down { transform: translateY(100%); transition: transform 0.4s ease-in; }
+        
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="fixed top-0 left-0 right-0 z-[2000] p-4 glass-nav flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/20">
+                <svg class="w-7 h-7 text-slate-900" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3zm0 4.84L18.16 13H17v5h-2v-5a1 1 0 00-1-1h-4a1 1 0 00-1 1v5H7v-5H5.84L12 7.84z"/></svg>
+            </div>
+            <div>
+                <h1 class="text-lg font-black text-white tracking-tighter leading-none">MAHAVALUATION</h1>
+                <p class="text-[9px] font-bold text-amber-500 uppercase tracking-[0.2em]">Government ASR Analytics</p>
+            </div>
+        </div>
+
+        <select id="cityDropdown" onchange="switchCity(this.value)" class="bg-slate-800 text-amber-500 text-[10px] font-black px-4 py-2 rounded-xl border border-amber-500/50 outline-none">
+            <option value="nashik">NASHIK</option>
+            <option value="pune">PUNE</option>
+            <option value="mumbai">MUMBAI</option>
+            <option value="thane">THANE</option>
+            <option value="nagpur">NAGPUR</option>
+            <option value="aurangabad">AURANGABAD</option>
+        </select>
+    </header>
+
+    <div class="fixed top-24 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-[2001]">
+        <div class="relative bg-white rounded-2xl shadow-2xl p-1">
+            <input type="text" id="areaSearch" oninput="handleSearch(this.value)" placeholder="Search City or Area Name..." class="w-full p-4 pl-12 font-bold text-slate-800 outline-none rounded-xl bg-slate-50">
+            <svg class="w-5 h-5 absolute left-5 top-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="3"></path></svg>
+        </div>
+        <div id="searchResults" class="search-results hidden max-h-80 overflow-y-auto divide-y divide-slate-100"></div>
+    </div>
+
+    <div id="map"></div>
+
+    <div id="quickCard" class="fixed bottom-10 left-4 right-4 z-[1001] max-w-lg mx-auto bg-white p-7 rounded-[2.5rem] shadow-2xl translate-y-[150%] transition-all duration-500">
+        <div class="flex justify-between items-start mb-6">
+            <div>
+                <h2 id="qTitle" class="text-2xl font-black text-slate-900 tracking-tighter leading-none italic">Select Area</h2>
+                <div class="mt-3 flex items-center gap-3">
+                    <span id="qRate" class="text-2xl font-black text-amber-600">₹ 0</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-tight">Current Rate<br>Per Sq.Ft</span>
+                </div>
+            </div>
+            <button onclick="hideQuickCard()" class="w-10 h-10 flex items-center justify-center bg-slate-100 rounded-full text-slate-400">✕</button>
+        </div>
+        <button onclick="openFullReport()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-[0.2em] shadow-xl hover:bg-amber-500 transition-all">
+            Unlock Full Property Report
+        </button>
+    </div>
+
+    <div id="reportModal" class="report-panel slide-down p-10">
+        <div class="w-20 h-1.5 bg-slate-200 rounded-full mx-auto mb-10"></div>
+        
+        <div class="flex flex-col md:flex-row justify-between items-start mb-10 gap-4">
+            <div>
+                <p id="repCity" class="text-[11px] font-black text-amber-600 uppercase tracking-widest mb-1">State Department District</p>
+                <h3 id="repArea" class="text-5xl font-black text-slate-900 tracking-tighter">Area Name</h3>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 px-6 py-3 rounded-2xl">
+                <p class="text-[9px] font-bold text-slate-400 uppercase">ASR Reference</p>
+                <p class="text-xs font-black text-slate-900">YEAR 2026-2027</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                <p class="text-[9px] font-black text-slate-400 uppercase mb-2">Connectivity</p>
+                <p class="text-sm font-bold text-slate-700">Excellent - Direct access to Highway & Transit Hubs.</p>
+            </div>
+            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                <p class="text-[9px] font-black text-slate-400 uppercase mb-2">Growth Rate</p>
+                <p class="text-sm font-bold text-slate-700">High Appreciation - Planned Infrastructure Zone.</p>
+            </div>
+            <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                <p class="text-[9px] font-black text-slate-400 uppercase mb-2">Zone Grade</p>
+                <p class="text-sm font-bold text-amber-600">A-Class Residential/Commercial Mix.</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-10">
+            <div class="space-y-8">
+                <div>
+                    <label class="block text-[11px] font-black text-slate-400 uppercase mb-3 tracking-widest">Property Carpet Area (Sq.Ft)</label>
+                    <input type="number" id="inpArea" value="1000" oninput="calculate()" class="w-full text-7xl font-black border-b-4 border-slate-100 focus:border-amber-500 outline-none pb-2 transition-all text-slate-900">
+                </div>
+            </div>
+
+            <div class="bg-slate-900 rounded-[3rem] p-10 text-white shadow-2xl relative overflow-hidden">
+                <div class="space-y-4 mb-8 opacity-70 text-sm font-bold">
+                    <div class="flex justify-between"><span>Base Market Value</span><span id="resMarket">₹ 0</span></div>
+                    <div class="flex justify-between"><span>Stamp Duty (6%)</span><span id="resStamp">₹ 0</span></div>
+                    <div class="flex justify-between border-t border-white/10 pt-4"><span>Registration (Flat)</span><span>₹ 30,000</span></div>
+                </div>
+                <p class="text-[10px] font-black uppercase text-amber-400 mb-1 tracking-widest">Total Acquisition Cost</p>
+                <h2 id="resGrand" class="text-5xl font-black tracking-tighter">₹ 0</h2>
+            </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 pb-10">
+            <button onclick="generatePDF()" class="flex-1 bg-amber-500 text-slate-900 font-black py-6 rounded-3xl text-xs uppercase tracking-[0.2em] shadow-xl shadow-amber-500/20">
+                Download Intelligence PDF
+            </button>
+            <button onclick="closeFullReport()" class="flex-1 bg-slate-100 text-slate-500 font-black py-6 rounded-3xl text-xs uppercase tracking-widest">
+                Return to Exploration
+            </button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let fullDatabase = [];
+        let markers = [];
+        let selectedItem = null;
+
+        const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([18.5204, 73.8567], 12);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
+
+        async function init() {
+            const cities = ['nashik', 'pune', 'mumbai', 'thane', 'nagpur', 'aurangabad'];
+            for(let city of cities) {
+                try {
+                    const res = await fetch(`data/${city}.json`);
+                    const data = await res.json();
+                    data.forEach(i => { i.cityName = city; fullDatabase.push(i); });
+                } catch(e) {}
+            }
+            switchCity('pune');
+        }
+
+        function switchCity(city) {
+            markers.forEach(m => map.removeLayer(m));
+            markers = [];
+            hideQuickCard();
+
+            const cityData = fullDatabase.filter(i => i.cityName === city);
+            cityData.forEach(item => {
+                const marker = L.circleMarker([item.lat, item.lng], {
+                    radius: 7, fillColor: '#f59e0b', color: '#0f172a', weight: 2, fillOpacity: 1
+                }).addTo(map);
+
+                marker.bindTooltip(item.area, { permanent: true, direction: 'top', className: 'area-label', offset: [0, -5] });
+                marker.on('click', () => selectArea(item));
+                markers.push(marker);
+            });
+            if(cityData.length > 0) map.flyTo([cityData[0].lat, cityData[0].lng], 13);
+        }
+
+        function handleSearch(val) {
+            const query = val.toLowerCase();
+            const resultsDiv = document.getElementById('searchResults');
+            if(query.length < 1) { resultsDiv.classList.add('hidden'); return; }
+
+            const matches = fullDatabase.filter(i => 
+                i.cityName.toLowerCase().startsWith(query) || 
+                i.area.toLowerCase().includes(query)
+            );
+
+            if(matches.length > 0) {
+                resultsDiv.innerHTML = matches.map(i => `
+                    <div class="p-5 hover:bg-amber-50 cursor-pointer flex justify-between items-center transition-all" onclick='selectFromSearch(${JSON.stringify(i)})'>
+                        <div>
+                            <div class="font-black text-slate-800">${i.area}</div>
+                            <div class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">${i.cityName} Ready Reckoner</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-base font-black text-amber-600">₹${i.rate.toLocaleString()}</div>
+                            <div class="text-[8px] font-bold text-slate-300 uppercase">Rate/Sqft</div>
+                        </div>
+                    </div>
+                `).join('');
+                resultsDiv.classList.remove('hidden');
+            } else { resultsDiv.classList.add('hidden'); }
+        }
+
+        window.selectFromSearch = (item) => {
+            document.getElementById('searchResults').classList.add('hidden');
+            document.getElementById('areaSearch').value = item.area;
+            document.getElementById('cityDropdown').value = item.cityName;
+            switchCity(item.cityName);
+            selectArea(item);
+        };
+
+        function selectArea(item) {
+            selectedItem = item;
+            document.getElementById('qTitle').innerText = item.area;
+            document.getElementById('qRate').innerText = `₹ ${item.rate.toLocaleString()}`;
+            document.getElementById('quickCard').classList.remove('translate-y-[150%]');
+            map.flyTo([item.lat, item.lng], 15);
+        }
+
+        function hideQuickCard() { document.getElementById('quickCard').classList.add('translate-y-[150%]'); }
+        function openFullReport() {
+            document.getElementById('repArea').innerText = selectedItem.area;
+            document.getElementById('repCity').innerText = selectedItem.cityName.toUpperCase() + " REGIONAL DISTRICT";
+            calculate();
+            document.getElementById('reportModal').classList.remove('slide-down');
+            document.getElementById('reportModal').classList.add('slide-up');
+        }
+        function closeFullReport() { document.getElementById('reportModal').classList.add('slide-down'); }
+
+        function calculate() {
+            if(!selectedItem) return;
+            const area = parseFloat(document.getElementById('inpArea').value) || 0;
+            const market = selectedItem.rate * area;
+            const stamp = market * 0.06;
+            const total = market + stamp + 30000;
+
+            document.getElementById('resMarket').innerText = `₹ ${Math.round(market).toLocaleString()}`;
+            document.getElementById('resStamp').innerText = `₹ ${Math.round(stamp).toLocaleString()}`;
+            document.getElementById('resGrand').innerText = `₹ ${Math.round(total).toLocaleString()}`;
+        }
+
+        // UPDATED PDF GENERATOR WITH LOGO AND HIGHLIGHTED TOTAL
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const areaVal = document.getElementById('inpArea').value || "0";
+            const market = Math.round(selectedItem.rate * parseFloat(areaVal)).toLocaleString();
+            const stamp = Math.round((selectedItem.rate * parseFloat(areaVal)) * 0.06).toLocaleString();
+            const grand = Math.round((selectedItem.rate * parseFloat(areaVal)) * 1.06 + 30000).toLocaleString();
+
+            // HEADER DESIGN
+            doc.setFillColor(15, 23, 42); 
+            doc.rect(0, 0, 210, 50, 'F');
+            
+            // DRAW APP LOGO (SVG House Icon representation)
+            doc.setFillColor(245, 158, 11); // Amber-500
+            doc.roundedRect(20, 12, 12, 12, 2, 2, 'F');
+            doc.setTextColor(15, 23, 42);
+            doc.setFontSize(10);
+            doc.text("MV", 23, 20); // Logo Initials
+
+            doc.setTextColor(255); 
+            doc.setFontSize(22); 
+            doc.setFont(undefined, 'bold');
+            doc.text("MAHAVALUATION", 38, 22);
+            
+            doc.setTextColor(245, 158, 11);
+            doc.setFontSize(9); 
+            doc.setFont(undefined, 'normal');
+            doc.text("GOVERNMENT ASR ANALYTICS REPORT | 2026-27", 38, 30);
+
+            // PROPERTY SUMMARY
+            doc.setTextColor(40); 
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text(`Appraisal for: ${selectedItem.area}`, 20, 65);
+            doc.setFontSize(10); 
+            doc.setFont(undefined, 'normal');
+            doc.text(`District: ${selectedItem.cityName.toUpperCase()}`, 20, 72);
+
+            const tableBody = [
+                ["Property Carpet Area", areaVal + " Sq.Ft"],
+                ["Ready Reckoner Base Rate", "Rs. " + selectedItem.rate.toLocaleString() + " /sqft"],
+                ["Base Market Valuation", "Rs. " + market],
+                ["Stamp Duty (6%)", "Rs. " + stamp],
+                ["Registration Charges", "Rs. 30,000"]
+            ];
+
+            doc.autoTable({
+                startY: 85,
+                head: [['Valuation Parameter', 'Assessment Data']],
+                body: tableBody,
+                theme: 'grid',
+                headStyles: { fillColor: [15, 23, 42], textColor: [251, 191, 36], fontSize: 11, fontStyle: 'bold' },
+                styles: { fontSize: 10, cellPadding: 6 },
+            });
+
+            // HIGHLIGHTED TOTAL COST BOX
+            const finalY = doc.lastAutoTable.finalY + 10;
+            doc.setFillColor(255, 251, 235); // Light amber background
+            doc.setDrawColor(245, 158, 11);
+            doc.setLineWidth(0.5);
+            doc.roundedRect(20, finalY, 170, 25, 3, 3, 'FD');
+
+            doc.setTextColor(15, 23, 42);
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'bold');
+            doc.text("TOTAL ESTIMATED INVESTMENT", 30, finalY + 10);
+            
+            doc.setTextColor(180, 83, 9); // Amber-700
+            doc.setFontSize(20);
+            doc.text("Rs. " + grand, 30, finalY + 20);
+
+            // FOOTER
+            doc.setFontSize(8); 
+            doc.setTextColor(150);
+            doc.setFont(undefined, 'normal');
+            doc.text("Disclaimer: This digital assessment is based on state government ASR benchmarks.", 20, finalY + 45);
+            doc.text("Produced by MahaValuation Intelligence Systems.", 20, finalY + 50);
+
+            doc.save(`MahaValuation_${selectedItem.area}.pdf`);
+        }
+
+        init();
+    </script>
+</body>
+</html>
