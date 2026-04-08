@@ -1,0 +1,12 @@
+[
+  { "area": "Cidco (N1 to N12)", "sub": "Central Town", "rate": 4800, "lat": 19.8850, "lng": 75.3600, "zone": "Z-01/10", "trend": "Established", "hub": "Prozone Mall" },
+  { "area": "Nirala Bazar", "sub": "Commercial Hub", "rate": 7800, "lat": 19.8820, "lng": 75.3280, "zone": "Z-02/05", "trend": "Elite Commercial", "hub": "City Center" },
+  { "area": "Garkheda", "sub": "Residential", "rate": 5200, "lat": 19.8650, "lng": 75.3500, "zone": "Z-05/12", "trend": "High Demand", "hub": "Sutgirni Chowk" },
+  { "area": "Beed Bypass", "sub": "New Growth", "rate": 4100, "lat": 19.8400, "lng": 75.3400, "zone": "Z-12/44", "trend": "High Growth", "hub": "MIT College" },
+  { "area": "Aurangpura", "sub": "Central", "rate": 6500, "lat": 19.8880, "lng": 75.3250, "zone": "Z-03/01", "trend": "Administrative", "hub": "Zilla Parishad" },
+  { "area": "Shendra MIDC", "sub": "Industrial (AURIC)", "rate": 2800, "lat": 19.8600, "lng": 75.4600, "zone": "Z-IND/01", "trend": "Global Industrial", "hub": "DMIC Core" },
+  { "area": "Waluj", "sub": "Industrial West", "rate": 3100, "lat": 19.8450, "lng": 75.2250, "zone": "Z-IND/55", "trend": "Developing", "hub": "Bajaj Auto Area" },
+  { "area": "Osmanpura", "sub": "Residential", "rate": 5600, "lat": 19.8720, "lng": 75.3180, "zone": "Z-04/22", "trend": "Stable", "hub": "Dashmesh Nagar" },
+  { "area": "Railway Station Area", "sub": "Transit Hub", "rate": 4900, "lat": 19.8600, "lng": 75.3200, "zone": "Z-08/11", "trend": "Connectivity", "hub": "Bansilal Nagar" },
+  { "area": "Paithan Road", "sub": "Residential South", "rate": 3950, "lat": 19.8300, "lng": 75.3050, "zone": "Z-14/05", "trend": "Emerging", "hub": "Mahananda Dairy" }
+]

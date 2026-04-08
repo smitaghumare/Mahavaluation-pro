@@ -1,0 +1,14 @@
+[
+  { "area": "Panchpakhadi", "sub": "Thane Central", "rate": 10500, "lat": 19.1950, "lng": 72.9650, "zone": "Z-01/12", "trend": "Premium City", "hub": "TMC Office" },
+  { "area": "Naupada", "sub": "Thane Central", "rate": 11200, "lat": 19.1880, "lng": 72.9720, "zone": "Z-01/88", "trend": "Established", "hub": "Thane Station" },
+  { "area": "Ghodbunder Road", "sub": "Thane West", "rate": 8200, "lat": 19.2550, "lng": 72.9300, "zone": "Z-12/44", "trend": "High Growth", "hub": "Hiranandani Estate" },
+  { "area": "Majiwada", "sub": "Thane West", "rate": 9100, "lat": 19.2150, "lng": 72.9750, "zone": "Z-05/01", "trend": "Residential Hub", "hub": "Viviana Mall" },
+  { "area": "Vartak Nagar", "sub": "Thane West", "rate": 8800, "lat": 19.2080, "lng": 72.9600, "zone": "Z-04/15", "trend": "Developing", "hub": "Kora Kendra" },
+  { "area": "Waghbil", "sub": "Thane West", "rate": 7800, "lat": 19.2680, "lng": 72.9150, "zone": "Z-12/105", "trend": "Emerging", "hub": "Suraj Water Park" },
+  { "area": "Kasarvadavali", "sub": "Thane West", "rate": 7400, "lat": 19.2780, "lng": 72.9050, "zone": "Z-14/02", "trend": "Affordable", "hub": "Hypercity" },
+  { "area": "Kalwa", "sub": "Thane East", "rate": 5800, "lat": 19.1950, "lng": 72.9950, "zone": "Z-22/11", "trend": "Developing", "hub": "Kalwa Bridge" },
+  { "area": "Mumbra", "sub": "Thane South", "rate": 4200, "lat": 19.1750, "lng": 73.0250, "zone": "Z-25/08", "trend": "Budget Friendly", "hub": "Station Area" },
+  { "area": "Kolshet Road", "sub": "Thane West", "rate": 9400, "lat": 19.2300, "lng": 72.9800, "zone": "Z-08/12", "trend": "Premium Highrise", "hub": "Lodha Amara" },
+  { "area": "Pokhran Road No. 2", "sub": "Thane West", "rate": 10800, "lat": 19.2220, "lng": 72.9550, "zone": "Z-03/05", "trend": "Elite Res.", "hub": "Bethany Hospital" },
+  { "area": "Balkum", "sub": "Thane West", "rate": 8100, "lat": 19.2280, "lng": 72.9950, "zone": "Z-09/11", "trend": "High Demand", "hub": "Global Impact Hub" }
+]

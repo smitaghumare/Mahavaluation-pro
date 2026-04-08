@@ -1,0 +1,12 @@
+[
+  { "area": "Civil Lines", "sub": "Nagpur Central", "rate": 8200, "lat": 21.1520, "lng": 79.0700, "zone": "Z-01/05", "trend": "Premium Admin", "hub": "High Court Area" },
+  { "area": "Ramdaspeth", "sub": "Nagpur Central", "rate": 8900, "lat": 21.1380, "lng": 79.0750, "zone": "Z-01/102", "trend": "Elite Residential", "hub": "Central Mall" },
+  { "area": "Dharampeth", "sub": "Nagpur West", "rate": 8600, "lat": 21.1420, "lng": 79.0600, "zone": "Z-02/11", "trend": "High Demand", "hub": "Traffic Park" },
+  { "area": "Manish Nagar", "sub": "Nagpur South", "rate": 4800, "lat": 21.0950, "lng": 79.0850, "zone": "Z-12/44", "trend": "High Growth", "hub": "Airport Link" },
+  { "area": "MIHAN", "sub": "Special Economic Zone", "rate": 4100, "lat": 21.0500, "lng": 79.0300, "zone": "Z-IT/01", "trend": "IT-Industrial Hub", "hub": "AIIMS Nagpur" },
+  { "area": "Wadi", "sub": "Nagpur West", "rate": 3600, "lat": 21.1550, "lng": 79.0050, "zone": "Z-22/05", "trend": "Industrial Mix", "hub": "Amravati Road" },
+  { "area": "Besa", "sub": "Nagpur South", "rate": 3850, "lat": 21.0800, "lng": 79.1000, "zone": "Z-15/09", "trend": "Emerging Res.", "hub": "Ghogali Road" },
+  { "area": "Trimurti Nagar", "sub": "Nagpur West", "rate": 5400, "lat": 21.1150, "lng": 79.0450, "zone": "Z-05/88", "trend": "Established", "hub": "Orange City Hospital" },
+  { "area": "Wardhaman Nagar", "sub": "Nagpur East", "rate": 6100, "lat": 21.1550, "lng": 79.1200, "zone": "Z-08/12", "trend": "Commercial-Res", "hub": "CA Road" },
+  { "area": "Laxmi Nagar", "sub": "Nagpur South", "rate": 7400, "lat": 21.1200, "lng": 79.0650, "zone": "Z-04/15", "trend": "Stable Premium", "hub": "Scientific Society" }
+]

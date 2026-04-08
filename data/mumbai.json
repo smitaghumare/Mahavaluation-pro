@@ -1,0 +1,17 @@
+[
+  { "area": "Nariman Point", "sub": "South Mumbai", "rate": 28500, "lat": 18.9285, "lng": 72.8230, "zone": "Z-01/01", "trend": "Business Elite", "hub": "Marine Drive" },
+  { "area": "Malabar Hill", "sub": "South Mumbai", "rate": 32000, "lat": 18.9548, "lng": 72.7985, "zone": "Z-01/45", "trend": "Ultra Premium", "hub": "Raj Bhavan" },
+  { "area": "Worli", "sub": "South Mumbai", "rate": 24500, "lat": 19.0176, "lng": 72.8172, "zone": "Z-02/12", "trend": "Luxury Highrise", "hub": "Sea Link Entrance" },
+  { "area": "Bandra West", "sub": "Western Suburb", "rate": 21000, "lat": 19.0596, "lng": 72.8295, "zone": "Z-34/101", "trend": "Elite Res.", "hub": "Pali Hill" },
+  { "area": "Bandra East", "sub": "Western Suburb", "rate": 18500, "lat": 19.0612, "lng": 72.8517, "zone": "Z-34/205", "trend": "Commercial Hub", "hub": "BKC Entrance" },
+  { "area": "Juhu", "sub": "Western Suburb", "rate": 22500, "lat": 19.1075, "lng": 72.8263, "zone": "Z-36/12", "trend": "Ultra Premium", "hub": "Juhu Beach" },
+  { "area": "Andheri West", "sub": "Western Suburb", "rate": 14200, "lat": 19.1200, "lng": 72.8300, "zone": "Z-38/55", "trend": "High Demand", "hub": "Lokhandwala" },
+  { "area": "Andheri East", "sub": "Western Suburb", "rate": 12800, "lat": 19.1136, "lng": 72.8697, "zone": "Z-39/04", "trend": "Business Hub", "hub": "SEEPZ / Metro" },
+  { "area": "Goregaon East", "sub": "Western Suburb", "rate": 11500, "lat": 19.1650, "lng": 72.8600, "zone": "Z-42/10", "trend": "High Growth", "hub": "Oberoi Garden City" },
+  { "area": "Borivali West", "sub": "Western Suburb", "rate": 10800, "lat": 19.2300, "lng": 72.8500, "zone": "Z-45/02", "trend": "Stable", "hub": "Don Bosco" },
+  { "area": "Powai", "sub": "Eastern Suburb", "rate": 13400, "lat": 19.1176, "lng": 72.9060, "zone": "Z-48/88", "trend": "Premium", "hub": "IIT Bombay" },
+  { "area": "Ghatkopar East", "sub": "Eastern Suburb", "rate": 12100, "lat": 19.0770, "lng": 72.9100, "zone": "Z-52/11", "trend": "Developing", "hub": "Metro Station" },
+  { "area": "Chembur", "sub": "Eastern Suburb", "rate": 11200, "lat": 19.0622, "lng": 72.9000, "zone": "Z-55/01", "trend": "Established", "hub": "Diamond Garden" },
+  { "area": "Mulund West", "sub": "Eastern Suburb", "rate": 10500, "lat": 19.1720, "lng": 72.9560, "zone": "Z-60/05", "trend": "Family Res.", "hub": "Johnson & Johnson" },
+  { "area": "Kandivali East", "sub": "Western Suburb", "rate": 9950, "lat": 19.2100, "lng": 72.8700, "zone": "Z-44/12", "trend": "High Demand", "hub": "Thakur Village" }
+]
